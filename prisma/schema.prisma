@@ -1,0 +1,41 @@
+// schema.prisma
+
+// Define o provedor de geração de código Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Define a fonte de dados usando o provedor MySQL
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:19719210kjl@localhost:3306/petshop_databse"
+}
+
+// Define o modelo para a entidade Cliente
+model Cliente {
+  id_cliente    Int      @id @default(autoincrement()) // Chave primária autoincrementada
+  nome          String                                 // Nome do cliente
+  cpf           String                                 // CPF do cliente
+  email         String                                 // Email do cliente
+  endereco      String                                 // Endereço do cliente
+  telefone      String                                 // Telefone do cliente
+}
+
+// Define o modelo para a entidade Produto
+model Produto {
+  id_produto         Int      @id @default(autoincrement()) // Chave primária autoincrementada
+  nome               String                                 // Nome do produto
+  categoria          String                                 // Categoria do produto
+  preco              Float                                  // Preço do produto
+  quantidade_estoque Int                                    // Quantidade em estoque do produto
+}
+
+// Define o modelo para a entidade Venda
+model Venda {
+  id_venda    Int       @id @default(autoincrement()) // Chave primária autoincrementada
+  id_cliente  Int                                     // Chave estrangeira para Cliente
+  id_produto  Int                                     // Chave estrangeira para Produto
+  quantidade  Int                                     // Quantidade vendida
+  data_venda  DateTime  @default(now())               // Data da venda
+  total       Float                                   // Total da venda
+}
