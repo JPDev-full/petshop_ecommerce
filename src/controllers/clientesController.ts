@@ -13,3 +13,23 @@ export async function getClientes(req: Request, res: Response): Promise<void> {
         res.status(500).json({ error: 'Erro ao obter clientes' });
     }
 }
+
+export async function postCliente(req: Request, res: Response): Promise<void> {
+    const { nome, cpf, email, endereco, telefone } = req.body;
+    try {
+        const cliente = await prisma.cliente.create({
+            data: {
+                nome,
+                cpf,
+                email,
+                endereco,
+                telefone
+            }
+        });
+        res.json(cliente);
+    } catch (error) {
+        console.error('Erro ao criar cliente:', error);
+        res.status(500).json({ error: 'Erro ao criar cliente' });
+    }
+}    
+    
