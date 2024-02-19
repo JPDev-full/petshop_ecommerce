@@ -27,7 +27,7 @@ async function synchronizeDatabase() {
 synchronizeDatabase()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}/api/clients`);
+      console.log(`Server is running on http://localhost:${PORT}/api/`);
     });
   })
   .catch(error => {

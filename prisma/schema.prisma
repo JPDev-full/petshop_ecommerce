@@ -8,7 +8,7 @@ generator client {
 // Define a fonte de dados usando o provedor MySQL
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:19719210kjl@localhost:3306/petshop_database"
+  url      = "mysql://root:123456@localhost:3306/petshop_database"
 }
 
 // Define o modelo para a entidade Cliente
