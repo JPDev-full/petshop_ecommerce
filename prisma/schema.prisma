@@ -8,17 +8,17 @@ generator client {
 // Define a fonte de dados usando o provedor MySQL
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:@localhost:3306/petshop_databse"
+  url      = "mysql://root:123456@localhost:3306/petshop_database"
 }
 
 // Define o modelo para a entidade Cliente
-model Cliente {
-  id_cliente    Int      @id @default(autoincrement()) // Chave primária autoincrementada
-  nome          String                                 // Nome do cliente
-  cpf           String                                 // CPF do cliente
-  email         String                                 // Email do cliente
-  endereco      String                                 // Endereço do cliente
-  telefone      String                                 // Telefone do cliente
+model Clients {
+  id_clients  String   @id @default(uuid()) @map(name: "id_clients")
+  name        String
+  cpf         String      @unique
+  email       String   @unique
+  phone       Int
+  password    String
 }
 
 // Define o modelo para a entidade Produto
