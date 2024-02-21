@@ -1,7 +1,7 @@
-import express, { Application } from 'express';
-import clientesRoutes from "./routes.clientes";
-import productsRoutes from "./routes.produtos";
-import salesRoutes from "./routes.vendas";
+import express, { Application } from "express";
+import clientesRoutes from "./clientsRoutes";
+import productsRoutes from "./productsRoutes";
+import salesRoutes from "./salesRoutes";
 
 const router = express.Router();
 
