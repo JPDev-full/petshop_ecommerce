@@ -4,6 +4,7 @@ import productsRoutes from "./productsRoutes";
 import salesRoutes from "./salesRoutes";
 import usersRoutes from "./usersRoutes";
 
+
 const router = express.Router();
 
 export function routes(app: Application) {
