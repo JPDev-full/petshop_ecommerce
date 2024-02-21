@@ -41,8 +41,8 @@ model Venda {
 }
 
 // Define o modelo para Endereço
-model Adress {
-  id_adress    Int @id @default(autoincrement())      // Chave primárian autoincrementada
+model Address {
+  id_address    Int @id @default(autoincrement())      // Chave primárian autoincrementada
   id_clients   Int                                    // Chave estrangeira para Cliente
   street       String                                 // Nome da Rua
   city         String                                 // Nome da Cidade
