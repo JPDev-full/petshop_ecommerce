@@ -11,7 +11,7 @@ datasource db {
 
 // Define the model for the Client entity
 model Clients {
-  id_client String  @id @default(uuid()) @map(name: "id_client")
+  id_client Int     @id @default(autoincrement())
   name      String
   cpf       String  @unique
   email     String  @unique
@@ -38,16 +38,16 @@ model Sales {
   quantity     Int
   sale_date    DateTime @default(now())
   total_amount Float
-  client_id    String
+  client_id    Int
   product_id   Int
 }
 
 // Define the model for the User entity
 model Users {
-  id_user   String   @id @default(uuid())
+  id_user   String   @id @default(uuid()) @map(name: "id_user")
   client    Clients? @relation(fields: [client_id], references: [id_client])
   email     String
   password  String
-  isAdmin   Boolean
-  client_id String?  @unique
+  isAdmin   Boolean?
+  client_id Int?     @unique
 }
