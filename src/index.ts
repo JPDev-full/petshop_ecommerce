@@ -1,24 +1,36 @@
-// index.ts
-import express from "express";
-import { routes } from "./routes/routes";
-const app = express();
-const PORT = 3000;
-import path from "path";
+import express, { Application } from 'express';
+import dotenv from 'dotenv';
+import { routes } from './routes/routes';
+import { PrismaClient } from '@prisma/client';
+
+dotenv.config();
+
+const app: Application = express();
+const PORT: number = parseInt(process.env.PORT!) || 3000;
+const prisma = new PrismaClient();
 
 app.use(express.json());
-routes(app);
+routes(app); 
 
-app.use(express.static(path.join(__dirname, "views", "home")));
-app.use(express.static(path.join(__dirname, "views", "login")));
+async function synchronizeDatabase() {
+  try {
+    await prisma.$connect();
+    await prisma.$executeRaw`SELECT 1+1`;
 
-app.use((req: any, res: any, next: any) => {
-  if (req.url === "/") {
-    res.redirect("/home");
-  } else {
-    next();
+    console.log('Database synchronization successful.');
+  } catch (error) {
+    console.error('Error during database synchronization:', error);
+    process.exit(1);
   }
-});
+}
 
-app.listen(PORT, () => {
-  console.log(`Servidor está rodando na porta ${PORT}`);
-});
+
+synchronizeDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}/api/`);
+    });
+  })
+  .catch(error => {
+    console.error('Failed to start server:', error);
+  });
