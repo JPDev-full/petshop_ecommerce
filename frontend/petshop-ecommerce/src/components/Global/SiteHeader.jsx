@@ -1,6 +1,5 @@
 import React from "react";
 import { AppBar, Toolbar, Button, Menu, MenuItem } from "@mui/material";
-import { LoginPage } from "../../pages/LoginPage";
 
 export function SiteHeader() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -69,7 +68,7 @@ export function SiteHeader() {
         <Button
           color="inherit"
           sx={{ backgroundColor: "#f8b195", color: "#333" }}
-          onClick={<LoginPage />}
+          onClick={() => alert("Clicou em Contato")}
           style={{
             marginLeft: "0.375rem",
           }}

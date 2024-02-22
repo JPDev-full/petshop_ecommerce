@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { Clients } from "./clientModel";
 
 const prisma = new PrismaClient();
 
@@ -10,16 +11,54 @@ export interface Users {
   isAdmin?: boolean;
 }
 
-export async function createUser(userData: Users) {
-  const hashedPassword = await bcrypt.hash(userData.password, 10);
-  const { client_id, isAdmin = false, ...data } = userData;
-  return await prisma.users.create({
-    data: {
-      ...data,
-      isAdmin,
-      password: hashedPassword,
-    },
-  });
+export async function createUser(userData: Users, clientData: Clients) {
+  try {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const { client_id, isAdmin = false, ...data } = userData;
+
+    let newClient;
+    if (!client_id) {
+      newClient = await prisma.clients.create({
+        data: {
+          ...clientData,
+        },
+      });
+    }
+
+    const newUser = await prisma.users.create({
+      data: {
+        ...data,
+        isAdmin,
+        password: hashedPassword,
+        client_id: client_id || newClient?.id_client,
+      },
+    });
+
+    return newUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error creating user");
+  }
+}
+
+export async function createAdmin(userData: Users) {
+  try {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const { isAdmin = true, ...data } = userData;
+
+    const newUser = await prisma.users.create({
+      data: {
+        ...data,
+        isAdmin,
+        password: hashedPassword,
+      },
+    });
+
+    return newUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error creating user");
+  }
 }
 
 export async function getUserById(id: string) {

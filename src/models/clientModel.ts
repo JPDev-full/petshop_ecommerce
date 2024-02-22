@@ -4,40 +4,35 @@ const prisma = new PrismaClient();
 
 export interface Clients {
   name: string;
-  cpf: string; // Alterado para string
-  email: string;
-  phone: number;
+  cpf: string;
+  phone: string;
 }
 
 export async function createClient(clientData: Clients) {
-  const { ...data } = clientData;
   return await prisma.clients.create({
-    data: {
-      ...data,
-    },
+    data: clientData,
   });
 }
 
-export async function getClienteById(id: string) {
+export async function getClienteById(id: number) {
   return await prisma.clients.findUnique({
     where: { id_client: id },
   });
 }
 
-export async function updateCliente(id: string, clientData: Clients) {
-  const { ...data } = clientData;
+export async function updateClient(id: number, clientData: Clients) {
   return await prisma.clients.update({
     where: { id_client: id },
-    data: data,
+    data: clientData,
   });
 }
 
-export async function deleteCliente(id: string) {
+export async function deleteClient(id: number) {
   return await prisma.clients.delete({
     where: { id_client: id },
   });
 }
 
-export async function getAllClientes() {
+export async function getAllClients() {
   return await prisma.clients.findMany();
 }
