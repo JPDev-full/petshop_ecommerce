@@ -14,8 +14,7 @@ model Clients {
   id_client Int     @id @default(autoincrement())
   name      String
   cpf       String  @unique
-  email     String  @unique
-  phone     Int
+  phone     String  @unique
   user      Users? // Optional relationship with the User model
   Sale      Sales[]
 }
