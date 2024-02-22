@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export interface Adress {
+export interface IAddress {
     id_clients?: string;
     street: string;
     city: string;
@@ -10,8 +10,22 @@ export interface Adress {
     cep: number;
 };
 
-export async function createAdress(addressData: Adress){
-    const {id_clients, ...data} = addressData;
+export async function createAddress(addressData: IAddress){
+    const { id_clients, ...data } = addressData;
+
+    const existingAddress = await prisma.address.findUnique({
+        where: {
+            street: data.street,
+            city: data.city,
+            state: data.state,
+            cep: data.cep,
+        }
+      });
+    
+      if (existingAddress) {
+        throw new Error('Endereço já existe');
+      }
+    
     return await prisma.address.create({data});
 };
 
@@ -31,7 +45,7 @@ export async function getAddressByClientId(clientId: number){
     });
 };
 
-export async function updateAddress (id: string, addressData: Adress){
+export async function updateAddress (id: string, addressData: IAddress){
     const {id_clients, ...data} = addressData;
     return await prisma.address.update({ 
         where: { id_clients: id },
