@@ -16,7 +16,6 @@ export async function createAddress(req: Request, res: Response) {
     const address = await AddressModel.createAddress(addressData);
 
     return res.status(201).json({
-        error: false,
         message: 'Sucesso! Endereço adicionado com sucesso',
         address
     });
@@ -26,7 +25,7 @@ export async function createAddress(req: Request, res: Response) {
         message: 'Erro ao criar endereço' 
     });
   }
-}
+};
 
 export async function getAllAddress(req: Request, res: Response) {
     try {
@@ -39,7 +38,7 @@ export async function getAllAddress(req: Request, res: Response) {
             });
         }
 
-        return res.json(addressList);
+        return res.status(200).json(addressList);
 
     } catch (error) {
         return res.status(500).json({ 
@@ -47,4 +46,26 @@ export async function getAllAddress(req: Request, res: Response) {
             message: 'Erro ao buscar endereços' 
         });
     }
-}
+};
+
+export async function getAddressById(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const addressList = await AddressModel.getAddressByID(id);
+
+        if (!addressList) {
+            return res.status(404).json({ 
+                error: true, 
+                message: 'Endereço não encontrado' 
+            });
+        }
+
+        return res.status(200).json(addressList);
+
+    } catch (error) {
+        return res.status(500).json({ 
+            error: true, 
+            message: 'Erro ao buscar endereço por ID' 
+        });
+    }
+};

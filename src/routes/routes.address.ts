@@ -6,8 +6,8 @@ import { authenticateToken } from "../middleware/authentication";
 const router = express.Router();
 
 router.post('/createAddress', authenticateToken, addressController.createAddress);
-router.get('/getAllAddress', authenticateToken, addressController.getAllAddress);
-// router.get('/:id', authenticateToken, addressController.getAddressById);
+router.get('/listAddress', authenticateToken, addressController.getAllAddress);
+router.get('/listAddress/:id', authenticateToken, addressController.getAddressById);
 // router.put('/:id', authenticateToken, addressController.updateAddress);
 // router.delete('/:id', authenticateToken, addressController.deleteAddress);
 
