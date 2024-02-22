@@ -69,3 +69,16 @@ export async function getAddressById(req: Request, res: Response) {
         });
     }
 };
+
+export async function getAddressByClientId(req: Request, res: Response) {
+    try {
+        const { clientId } = req.params;
+        const addressesClient = await AddressModel.getAddressByClientId(parseInt(clientId));
+        return res.json(addressesClient);
+    } catch (error) {
+        return res.status(500).json({ 
+            error: true, 
+            message: 'Erro ao buscar endereços por ID do cliente' 
+        });
+    }
+}
