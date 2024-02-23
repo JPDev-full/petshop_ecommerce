@@ -14,6 +14,7 @@ export interface Address {
 export async function createAddress(addressData: Address) {
 
   const {client_id, ...data} = addressData
+
   return await prisma.address.create({
     data: {
       ... data

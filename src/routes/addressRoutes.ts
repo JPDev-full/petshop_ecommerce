@@ -5,11 +5,11 @@ import { authenticateToken } from "../middleware/authentication";
 
 const router = express.Router();
 
-router.post('/', authenticateToken ,addressController.createAddress);
+router.post('/',addressController.createAddress);
 router.get('/', authenticateToken ,addressController.getAllAddress);
-router.get('/:id',authenticateToken ,addressController.getAddressById);
+router.get('/:id', authenticateToken ,addressController.getAddressById);
 router.get('/client/:id', authenticateToken, addressController.getAddressByClientId);
-router.put('/:id', authenticateToken, addressController.updateAddress);
+router.put('/:id', addressController.updateAddress);
 router.delete('/:id', addressController.deleteAddress);
 
 export default router;
