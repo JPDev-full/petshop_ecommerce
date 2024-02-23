@@ -24,6 +24,7 @@ async function synchronizeDatabase() {
   }
 }
 
+
 synchronizeDatabase()
   .then(() => {
     app.listen(PORT, () => {
