@@ -17,6 +17,7 @@ model Clients {
   phone     String  @unique
   user      Users? // Optional relationship with the User model
   Sale      Sales[]
+  Address   Address[]
 }
 
 // Define the model for the Product entity
@@ -53,10 +54,11 @@ model Users {
 
 // Define o modelo para Endereço
 model Address {
-  id_address    Int @id @default(autoincrement())      // Chave primárian autoincrementada
-  id_clients   Int                                    // Chave estrangeira para Cliente
-  street       String                                 // Nome da Rua
-  city         String                                 // Nome da Cidade
-  state        String                                 // Nome do Estado
-  cep          String                                 // Cep do Endereço
+  id_address   Int @id @default(autoincrement())      
+  client_id    Int?                                   
+  street       String
+  city         String                                 
+  state        String                                 
+  cep          String                                 
+  client       Clients? @relation(fields: [client_id], references: [id_client])
 }
