@@ -50,3 +50,13 @@ model Users {
   isAdmin   Boolean?
   client_id Int?     @unique
 }
+
+// Define o modelo para Endereço
+model Address {
+  id_address    Int @id @default(autoincrement())      // Chave primárian autoincrementada
+  id_clients   Int                                    // Chave estrangeira para Cliente
+  street       String                                 // Nome da Rua
+  city         String                                 // Nome da Cidade
+  state        String                                 // Nome do Estado
+  cep          String                                 // Cep do Endereço
+}
