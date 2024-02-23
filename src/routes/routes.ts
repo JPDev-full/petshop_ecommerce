@@ -4,7 +4,7 @@ import productsRoutes from "./productsRoutes";
 import salesRoutes from "./salesRoutes";
 import usersRoutes from "./usersRoutes";
 import adminRoutes from "./adminRoutes";
-import addressRoutes from "./routes.address";
+import addressRoutes from "./addressRoutes";
 
 
 const router = express.Router();
