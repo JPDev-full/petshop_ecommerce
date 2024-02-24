@@ -1,34 +1,81 @@
-// // src/controllers/vendasController.ts
-// import { Request, Response } from 'express';
-// import { PrismaClient } from '@prisma/client';
+import { Request, Response } from "express";
+import * as salesModel from "../models/salesModel"
 
-// const prisma = new PrismaClient();
 
-// export async function criarVenda(req: Request, res: Response): Promise<void> {
-//     const { id_cliente, id_produto, quantidade, total } = req.body;
-//     try {
-//         const venda = await prisma.venda.create({
-//             data: {
-//                 id_cliente,
-//                 id_produto,
-//                 quantidade,
-//                 total
-//             }
-//         });
-//         // Atualizar a quantidade em estoque do produto
-//         await prisma.produto.update({
-//             where: {
-//                 id: id_produto
-//             },
-//             data: {
-//                 quantidade_estoque: {
-//                     decrement: quantidade
-//                 }
-//             }
-//         });
-//         res.json(venda);
-//     } catch (error) {
-//         console.error('Erro ao criar venda:', error);
-//         res.status(500).json({ error: 'Erro ao criar venda' });
-//     }
-// }
+export async function createSale(req: Request, res: Response) {
+  try{
+	const {  client_id, product_id,  quantity, total_amount } : {
+		client_id: number;
+        product_id: number;
+        quantity: number;
+        total_amount: number;
+	} = req.body;
+	const sale = await salesModel.createSale({
+	    client_id,
+        product_id,
+        quantity,
+        total_amount
+	});
+	res.status(201).json(sale);
+  }catch(error){
+	res.status(400).json(error);
+  }
+}
+
+
+export async function getAllSales(req: Request, res: Response){
+  const sales = await salesModel.getAllSales();
+  res.status(200).json(sales);
+}
+
+export async function getSaleById(req: Request, res: Response) {
+	try {
+		const { id } = req.params;
+        const sale = await salesModel.getSaleById(Number(id));
+        if (!sale) {
+            return res.status(404).json({ error: "Sale not found" });
+        }
+        res.status(200).json(sale);
+	} catch (error) {
+		console.error(error);
+        res.status(500).json({ error: "Error fetching sale" });
+	}
+}
+
+
+export async function updateSale(req: Request, res: Response) {
+	try {
+		const { id } = req.params;
+		const {
+			client_id,
+            product_id,
+            quantity,
+            total_amount
+		} = req.body;
+		const updatedSale = await salesModel.updateSale(Number(id), {
+			client_id,
+            product_id,
+            quantity,
+            total_amount
+		});
+		res.status(200).json(updatedSale);
+	  } catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Error updating User" });
+	  }
+}
+
+
+export async function deleteSale(req: Request, res: Response) {
+	try {
+        const { id } = req.params;
+        const sale = await salesModel.deleteSale(Number(id));
+        if (!sale) {
+            return res.status(404).json({ error: "Sale not found" });
+        }
+        res.status(200).json(sale);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error updating User" });
+      }  
+}

@@ -1,10 +1,14 @@
-// src/routes/vendas.ts
 import express from "express";
-// import { criarVenda } from '../controllers/vendasController';
+import * as salesController from '../controllers/salesController';
 import { authenticateToken } from "../middleware/authentication";
 
 const router = express.Router();
 
-// router.post('/', authenticateToken, criarVenda);
+
+router.post('/sale', authenticateToken, salesController.createSale);
+router.get('/list-sale', authenticateToken, salesController.createSale);
+router.get('/:id', authenticateToken, salesController.createSale);
+router.put('/:id', authenticateToken, salesController.createSale);
+router.delete('/:id', authenticateToken, salesController.createSale);
 
 export default router;
