@@ -8,15 +8,53 @@ export async function createUser(req: Request, res: Response) {
       email,
       password,
       isAdmin = false,
+      name,
+      cpf,
+      phone,
     }: {
       email: string;
       password: string;
       isAdmin?: boolean;
+      name: string;
+      cpf: string;
+      phone: string;
     } = req.body;
-    const { name, cpf, phone }: { name: string; cpf: string; phone: string } =
-      req.body;
-    // Cria o cliente
 
+    if (!email || !password || !name || !cpf || !phone) {
+      return res
+        .status(400)
+        .json({ error: "Email, password, name, CPF, and phone are required" });
+    }
+    const allUsers = await userModel.getAllUsers();
+
+    // Check if the email is already in use
+    const existingUserEmail = allUsers.find((user) => user.email === email);
+    if (existingUserEmail) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+    const allClients = await clientModel.getAllClients();
+
+    // Check if the new CPF or phone already exists for another client
+    const existingClientWithCPF = allClients.find(
+      (client) => client.cpf === cpf
+    );
+    if (existingClientWithCPF) {
+      return res
+        .status(400)
+        .json({ error: "CPF already exists for another client" });
+    }
+
+    const existingClientWithPhone = allClients.find(
+      (client) => client.phone === phone
+    );
+    if (existingClientWithPhone) {
+      return res
+        .status(400)
+        .json({ error: "Phone number already exists for another client" });
+    }
+
+    // Create the user and associated client
     const newUser = await userModel.createUser(
       { email, password, isAdmin },
       { name, cpf, phone }
@@ -24,7 +62,7 @@ export async function createUser(req: Request, res: Response) {
     res.status(201).json(newUser);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error creating Client" });
+    res.status(500).json({ error: "Error creating User" });
   }
 }
 
@@ -39,6 +77,19 @@ export async function createAdmin(req: Request, res: Response) {
       password: string;
       isAdmin?: boolean;
     } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const allUsers = await userModel.getAllUsers();
+
+    // Check if the email is already in use
+    const existingUserEmail = allUsers.find((user) => user.email === email);
+    if (existingUserEmail) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
     const newUser = await userModel.createAdmin({
       email,
       password,
@@ -48,20 +99,6 @@ export async function createAdmin(req: Request, res: Response) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error creating User" });
-  }
-}
-
-export async function getUserById(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const user = await userModel.getUserById(id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error fetching User" });
   }
 }
 
@@ -79,6 +116,19 @@ export async function updateUser(req: Request, res: Response) {
       client_id?: number;
       isAdmin?: boolean;
     } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const allUsers = await userModel.getAllUsers();
+
+    // Check if the email is already in use
+    const existingUserEmail = allUsers.find((user) => user.email === email);
+    if (existingUserEmail) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
     const updatedClient = await userModel.updateUser(id, {
       email,
       password,
@@ -117,7 +167,21 @@ export async function deleteUser(req: Request, res: Response) {
   }
 }
 
-export async function getAllUsers(req: Request, res: Response) {
+export async function getUserById(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const user = await userModel.getUserById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching User" });
+  }
+}
+
+export async function getAllUsers(_: Request, res: Response) {
   try {
     const users = await userModel.getAllUsers();
     res.json(users);

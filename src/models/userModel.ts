@@ -86,3 +86,14 @@ export async function deleteUser(id: string) {
 export async function getAllUsers() {
   return await prisma.users.findMany();
 }
+
+export async function getUserByEmail(email: string) {
+  try {
+    return await prisma.users.findFirst({
+      where: { email: email },
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching user by email");
+  }
+}
