@@ -1,41 +1,64 @@
-// schema.prisma
-
-// Define o provedor de geração de código Prisma Client
+// Define the Prisma Client code generation provider
 generator client {
   provider = "prisma-client-js"
 }
 
-// Define a fonte de dados usando o provedor MySQL
+// Define the data source using the MySQL provider
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:@localhost:3306/petshop_databse"
+  url      = env("DATABASE_URL")
 }
 
-// Define o modelo para a entidade Cliente
-model Cliente {
-  id_cliente    Int      @id @default(autoincrement()) // Chave primária autoincrementada
-  nome          String                                 // Nome do cliente
-  cpf           String                                 // CPF do cliente
-  email         String                                 // Email do cliente
-  endereco      String                                 // Endereço do cliente
-  telefone      String                                 // Telefone do cliente
+// Define the model for the Client entity
+model Clients {
+  id_client Int     @id @default(autoincrement())
+  name      String
+  cpf       String  @unique
+  phone     String  @unique
+  user      Users? // Optional relationship with the User model
+  Sale      Sales[]
+  Address   Address[]
 }
 
-// Define o modelo para a entidade Produto
-model Produto {
-  id_produto         Int      @id @default(autoincrement()) // Chave primária autoincrementada
-  nome               String                                 // Nome do produto
-  categoria          String                                 // Categoria do produto
-  preco              Float                                  // Preço do produto
-  quantidade_estoque Int                                    // Quantidade em estoque do produto
+// Define the model for the Product entity
+model Products {
+  id_product     Int     @id @default(autoincrement())
+  name           String
+  category       String
+  price          Float
+  stock_quantity Int
+  Sale           Sales[]
 }
 
-// Define o modelo para a entidade Venda
-model Venda {
-  id_venda    Int       @id @default(autoincrement()) // Chave primária autoincrementada
-  id_cliente  Int                                     // Chave estrangeira para Cliente
-  id_produto  Int                                     // Chave estrangeira para Produto
-  quantidade  Int                                     // Quantidade vendida
-  data_venda  DateTime  @default(now())               // Data da venda
-  total       Float                                   // Total da venda
+// Define the model for the Sale entity
+model Sales {
+  id_sale      Int      @id @default(autoincrement())
+  client       Clients  @relation(fields: [client_id], references: [id_client])
+  product      Products @relation(fields: [product_id], references: [id_product])
+  quantity     Int
+  sale_date    DateTime @default(now())
+  total_amount Float
+  client_id    Int
+  product_id   Int
+}
+
+// Define the model for the User entity
+model Users {
+  id_user   String   @id @default(uuid()) @map(name: "id_user")
+  client    Clients? @relation(fields: [client_id], references: [id_client])
+  email     String
+  password  String
+  isAdmin   Boolean?
+  client_id Int?     @unique
+}
+
+// Define o modelo para Endereço
+model Address {
+  id_address   Int @id @default(autoincrement())      
+  client_id    Int?                                   
+  street       String
+  city         String                                 
+  state        String                                 
+  cep          String                                 
+  client       Clients? @relation(fields: [client_id], references: [id_client])
 }

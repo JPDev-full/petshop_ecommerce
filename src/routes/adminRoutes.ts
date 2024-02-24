@@ -1,10 +1,9 @@
-// src/routes/vendas.ts
 import express from "express";
-// import { criarVenda } from '../controllers/vendasController';
+import * as usersController from "../controllers/usersController";
 import { authenticateToken } from "../middleware/authentication";
 
 const router = express.Router();
 
-// router.post('/', authenticateToken, criarVenda);
+router.post("/", usersController.createAdmin);
 
 export default router;
