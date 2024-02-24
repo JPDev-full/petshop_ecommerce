@@ -19,6 +19,14 @@ git clone https://github.com/seu-usuario/seu-projeto.git
 npm install
 ```
 
+3. Instale o mysql e configure para para rodar como o usuario root com o host localhost e porta 3306.
+
+4. Gere as migrations executando o seguinte comando:
+
+```bash
+npx prisma generate dev
+```
+
 ## Configuração do arquivo .env
 
 O projeto usa um arquivo `.env` para armazenar as variáveis de ambiente. Você precisa configurar este arquivo com as informações relevantes. Para isso, siga estas etapas:
