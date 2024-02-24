@@ -1,11 +1,7 @@
-// src/controllers/productsController.ts
 import { Request, Response } from "express";
 import * as productModel from "../models/productsModel";
 
-export async function getAllProducts(
-  req: Request,
-  res: Response
-): Promise<void> {
+export async function getAllProducts(_: Request, res: Response) {
   try {
     const products = await productModel.getAllProducts();
     res.json(products);
@@ -15,12 +11,12 @@ export async function getAllProducts(
   }
 }
 
-export async function createProduct(
-  req: Request,
-  res: Response
-): Promise<void> {
+export async function createProduct(req: Request, res: Response) {
   try {
     const { name, category, price, stock_quantity } = req.body;
+    if (!name || !category || !price) {
+      res.status(400).json({ error: "Name, category and price are required" });
+    }
     const newProduct = await productModel.createProduct({
       name,
       category,
@@ -37,7 +33,11 @@ export async function createProduct(
 export async function getProductById(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const product = await productModel.getProductById(Number(id));
+    const productId = Number(id);
+    if (isNaN(productId)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+    const product = await productModel.getProductById(productId);
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
@@ -51,8 +51,19 @@ export async function getProductById(req: Request, res: Response) {
 export async function updateProduct(req: Request, res: Response) {
   try {
     const { id } = req.params;
+    const productId = Number(id);
+    if (isNaN(productId)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
     const { name, category, price, stock_quantity } = req.body;
-    const updatedProduct = await productModel.updateProduct(Number(id), {
+    if (!name || !category || !price || !stock_quantity) {
+      return res
+        .status(400)
+        .json({
+          error: "Name, category, price, and stock_quantity are required",
+        });
+    }
+    const updatedProduct = await productModel.updateProduct(productId, {
       name,
       category,
       price,
@@ -68,7 +79,11 @@ export async function updateProduct(req: Request, res: Response) {
 export async function deleteProduct(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    await productModel.deleteProduct(Number(id));
+    const productId = Number(id);
+    if (isNaN(productId)) {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+    await productModel.deleteProduct(productId);
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
     console.error(error);
